@@ -1,0 +1,30 @@
+{
+  "name": "social-networking-kata",
+  "version": "1.0.0",
+  "description": "This project is a practical implementation of Hexagonal Architecture and Clean Architecture principles in a Node.js + TypeScript environment. It simulates a minimalist Twitter-like CLI application called \"Network\", built incrementally through Test-Driven Development (TDD).",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --noEmit ./index.ts && esbuild index.ts --bundle --platform=node --format=cjs --outfile=dist/index.js"
+
+  },
+  "bin": {
+    "network": "dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CCDevX/social-networking-kata.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/CCDevX/social-networking-kata/issues"
+  },
+  "homepage": "https://github.com/CCDevX/social-networking-kata#readme",
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "esbuild": "^0.25.5",
+    "typescript": "^5.8.3"
+  }
+}
