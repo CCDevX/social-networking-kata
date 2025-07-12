@@ -4,7 +4,7 @@
   "description": "This project is a practical implementation of Hexagonal Architecture and Clean Architecture principles in a Node.js + TypeScript environment. It simulates a minimalist Twitter-like CLI application called \"Network\", built incrementally through Test-Driven Development (TDD).",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --noEmit ./index.ts && esbuild index.ts --bundle --platform=node --format=cjs --outfile=dist/index.js"
+    "build": "tsc --noEmit && esbuild index.ts --bundle --platform=node --format=cjs --outfile=dist/index.js"
   },
   "bin": {
     "network": "dist/index.js"
@@ -26,7 +26,11 @@
     "@types/node": "^24.0.10",
     "esbuild": "^0.25.5",
     "jest": "^30.0.4",
+    "prettier": "^3.6.2",
     "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "commander": "^14.0.0"
   }
 }
