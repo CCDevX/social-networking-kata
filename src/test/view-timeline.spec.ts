@@ -8,7 +8,7 @@ describe("Feature: Viewing a personal timeline", () => {
   });
 
   describe("Rule: Messages are shown in reverse chronological order", () => {
-    test("Alice can view the 2 messages she published in her timeline", async () => {
+    test("Alice can view the 3 messages she published in her timeline", async () => {
       const aliceMessageBuilder = messageBuilder().authoredBy("Alice");
       fixture.givenTheFollowingMessageExist([
         aliceMessageBuilder
@@ -33,8 +33,9 @@ describe("Feature: Viewing a personal timeline", () => {
           .publishedAt(new Date("2023-02-07T16:30:30.000Z"))
           .build(),
       ]);
+      fixture.givenNowIs(new Date("2023-02-07T16:31:00.000Z"));
 
-      const timeline = await fixture.whenUserSeesTheTimelineOf("Alice");
+      await fixture.whenUserSeesTheTimelineOf("Alice");
 
       fixture.thenUserShouldSee([
         {

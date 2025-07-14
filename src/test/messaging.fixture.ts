@@ -55,7 +55,8 @@ export const createMessagingFixture = () => {
     },
 
     async whenUserSeesTheTimelineOf(user: string) {
-      return await viewTimelineUseCase.handle({ user });
+      timeline = await viewTimelineUseCase.handle({ user });
+      return timeline;
     },
     thenUserShouldSee(
       expectedTimeline: {
@@ -64,7 +65,7 @@ export const createMessagingFixture = () => {
         publicationTime: string;
       }[],
     ) {
-      expect(timeline!).toEqual(expectedTimeline);
+      expect(timeline).toEqual(expectedTimeline);
     },
     async thenMessageShouldBe(expectedMessage: Message) {
       const message = await messageRepository.getById(expectedMessage.id);

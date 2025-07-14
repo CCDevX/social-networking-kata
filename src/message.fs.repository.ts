@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import { MessageRepository } from "./message.repository";
-import { Message, MessageText } from "./message";
+import { Message } from "./message";
 
 export class FileSystemMessageRepository implements MessageRepository {
   constructor(
@@ -19,14 +19,7 @@ export class FileSystemMessageRepository implements MessageRepository {
 
     return fs.promises.writeFile(
       this.filePath,
-      JSON.stringify(
-        messages.map((m) => ({
-          id: m.id,
-          author: m.author,
-          text: m.text.value,
-          publishedAt: m.publishedAt,
-        })),
-      ),
+      JSON.stringify(messages.map((m) => m.data)),
     );
   }
 
@@ -43,12 +36,14 @@ export class FileSystemMessageRepository implements MessageRepository {
       return [];
     }
 
-    return messages.map((m) => ({
-      id: m.id,
-      author: m.author,
-      text: MessageText.of(m.text),
-      publishedAt: new Date(m.publishedAt),
-    }));
+    return messages.map((m) =>
+      Message.fromData({
+        id: m.id,
+        author: m.author,
+        text: m.text,
+        publishedAt: new Date(m.publishedAt),
+      }),
+    );
   }
 
   async getAllOfUser(user: string): Promise<Message[]> {
