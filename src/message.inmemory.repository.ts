@@ -3,12 +3,7 @@ import { Message } from "./message";
 
 export class InMemoryMessageRepository implements MessageRepository {
   messages = new Map<string, Message>();
-  async save(msg: {
-    id: string;
-    text: string;
-    author: string;
-    publishedAt: Date | undefined;
-  }): Promise<void> {
+  async save(msg: Message): Promise<void> {
     this._save(msg);
 
     return Promise.resolve();
@@ -28,24 +23,25 @@ export class InMemoryMessageRepository implements MessageRepository {
 
   getAllOfUser(user: string): Promise<Message[]> {
     return Promise.resolve(
-      [...this.messages.values()].filter((msg) => msg.author === user),
-      // .map((m) =>
-      //   Message.fromData({
-      //     id: m.id,
-      //     author: m.author,
-      //     text: m.text,
-      //     publishedAt: m.publishedAt,
-      //   }),
-      // ),
+      [...this.messages.values()]
+        .filter((msg) => msg.author === user)
+        .map((m) => ({
+          id: m.id,
+          author: m.author,
+          text: m.text,
+          publishedAt: m.publishedAt,
+        })),
     );
+
+    // Message.fromData({
+    //   id: m.id,
+    //   author: m.author,
+    //   text: m.text,
+    //   publishedAt: m.publishedAt,
+    // }),
   }
 
-  private _save(msg: {
-    id: string;
-    text: string;
-    author: string;
-    publishedAt: Date | undefined;
-  }) {
+  private _save(msg: Message) {
     this.messages.set(msg.id, <Message>msg);
   }
 }

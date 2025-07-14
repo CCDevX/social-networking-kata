@@ -8,6 +8,10 @@ import {
 import { InMemoryMessageRepository } from "./src/message.inmemory.repository";
 import { FileSystemMessageRepository } from "./src/message.fs.repository";
 import { ViewTimelineUseCase } from "./src/view-timeline.usecase";
+import {
+  EditMessageCommand,
+  EditMessageUseCase,
+} from "./src/edit-message.usecase";
 
 class RealDateProvider implements DateProvider {
   getNow(): Date | undefined {
@@ -27,6 +31,9 @@ const viewTimelineUseCase = new ViewTimelineUseCase(
   messageRepository,
   dateProvider,
 );
+
+const editMessageUseCase = new EditMessageUseCase(messageRepository);
+
 program
   .version("1.0.0")
   .description("Social Networking Kata")
@@ -36,7 +43,7 @@ program
       .argument("<message>", "the message to post")
       .action(async (user, message) => {
         const postMessageCommand: PostMessageCommand = {
-          id: `${Math.floor(Math.random() + 10000000)}`,
+          id: `${Math.floor(Math.random() * 10000000)}`,
           text: message,
           author: user,
         };
@@ -58,6 +65,26 @@ program
         try {
           const timeline = await viewTimelineUseCase.handle({ user });
           console.table(timeline);
+          process.exit(0);
+        } catch (err) {
+          console.error("Error : ", err);
+          process.exit(1);
+        }
+      }),
+  )
+  .addCommand(
+    new Command("edit")
+      .argument("<message-id>", "the message id of the message to edit")
+      .argument("<message>", "the new message text")
+      .action(async (messageId, message) => {
+        const editMessageCommand: EditMessageCommand = {
+          messageId: messageId,
+          text: message,
+        };
+        try {
+          await editMessageUseCase.handle(editMessageCommand);
+          console.log("Message edited");
+          // console.table([messageRepository.message]);
           process.exit(0);
         } catch (err) {
           console.error("Error : ", err);

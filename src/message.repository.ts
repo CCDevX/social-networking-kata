@@ -1,11 +1,7 @@
 import { Message } from "./message";
 
 export interface MessageRepository {
-  save(msg: {
-    id: string;
-    text: string;
-    author: string;
-    publishedAt: Date | undefined;
-  }): Promise<void>;
+  save(msg: Message): Promise<void>;
   getAllOfUser(user: string): Promise<Message[]>;
+  getById(messageId: string): Promise<Message>;
 }

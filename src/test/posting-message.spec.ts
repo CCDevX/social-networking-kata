@@ -1,11 +1,8 @@
-import {
-  EmptyMessageError,
-  MessageTooLongError,
-} from "../post-message.usecase";
 import test from "node:test";
 import { describe } from "node:test";
 import { createMessagingFixture, MessagingFixture } from "./messaging.fixture";
 import { messageBuilder } from "./message.builder";
+import { EmptyMessageError, MessageTooLongError } from "../message";
 
 describe("Feature: Posting a message", () => {
   let fixture: MessagingFixture;
@@ -18,7 +15,7 @@ describe("Feature: Posting a message", () => {
         text: "Hello World",
         author: "Alice",
       });
-      fixture.thenMessageShouldBe(
+      await fixture.thenMessageShouldBe(
         messageBuilder()
           .withId("message-id")
           .authoredBy("Alice")

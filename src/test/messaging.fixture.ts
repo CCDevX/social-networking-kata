@@ -6,6 +6,10 @@ import {
 } from "../post-message.usecase";
 import { Message } from "../message";
 import { ViewTimelineUseCase } from "../view-timeline.usecase";
+import {
+  EditMessageCommand,
+  EditMessageUseCase,
+} from "../edit-message.usecase";
 
 export const createMessagingFixture = () => {
   const dateProvider = new StubDateProvider();
@@ -18,6 +22,7 @@ export const createMessagingFixture = () => {
     messageRepository,
     dateProvider,
   );
+  const editMessageUseCase = new EditMessageUseCase(messageRepository);
   let timeline: {
     author: string;
     text: string;
@@ -32,8 +37,14 @@ export const createMessagingFixture = () => {
       try {
         await postMessageUseCase.handle(postMessageCommand);
       } catch (err) {
-        // @ts-ignore
-        throwError = err;
+        throwError = err as Error;
+      }
+    },
+    async whenUserEditsMessage(editMessageCommand: EditMessageCommand) {
+      try {
+        await editMessageUseCase.handle(editMessageCommand);
+      } catch (err) {
+        throwError = err as Error;
       }
     },
     thenErrorShouldBe(expectedError: new () => Error) {
@@ -55,14 +66,9 @@ export const createMessagingFixture = () => {
     ) {
       expect(timeline!).toEqual(expectedTimeline);
     },
-    async whenUserEditsMessage(editMessageCommand: {
-      messageId: string;
-      text: string;
-    }) {},
-    thenMessageShouldBe(expectedMessage: Message) {
-      expect(expectedMessage).toEqual(
-        messageRepository.getMessageById(expectedMessage.id),
-      );
+    async thenMessageShouldBe(expectedMessage: Message) {
+      const message = await messageRepository.getById(expectedMessage.id);
+      expect(message).toEqual(expectedMessage);
     },
   };
 };
