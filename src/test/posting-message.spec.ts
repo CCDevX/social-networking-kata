@@ -1,5 +1,3 @@
-import test from "node:test";
-import { describe } from "node:test";
 import { createMessagingFixture, MessagingFixture } from "./messaging.fixture";
 import { messageBuilder } from "./message.builder";
 import { EmptyMessageError, MessageTooLongError } from "../message";
@@ -19,7 +17,7 @@ describe("Feature: Posting a message", () => {
         messageBuilder()
           .withId("message-id")
           .authoredBy("Alice")
-          .withText("Hello World 2")
+          .withText("Hello World")
           .publishedAt(new Date("2023-01-19T19:00:00.000Z"))
           .build(),
       );
