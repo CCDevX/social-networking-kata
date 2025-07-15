@@ -1,5 +1,5 @@
-import { MessageRepository } from "./message.repository";
-import { Message } from "./message";
+import { MessageRepository } from "../application/message.repository";
+import { Message } from "../domain/message";
 
 export class InMemoryMessageRepository implements MessageRepository {
   messages = new Map<string, Message>();
@@ -34,13 +34,6 @@ export class InMemoryMessageRepository implements MessageRepository {
           }),
         ),
     );
-
-    // Message.fromData({
-    //   id: m.id,
-    //   author: m.author,
-    //   text: m.text,
-    //   publishedAt: m.publishedAt,
-    // }),
   }
 
   private _save(msg: Message) {

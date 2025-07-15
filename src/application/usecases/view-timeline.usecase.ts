@@ -1,5 +1,5 @@
-import { MessageRepository } from "./message.repository";
-import { DateProvider } from "./post-message.usecase";
+import { MessageRepository } from "../message.repository";
+import { DateProvider } from "../date-provider";
 const ONE_MINUTE_IN_MS = 60000;
 export class ViewTimelineUseCase {
   constructor(

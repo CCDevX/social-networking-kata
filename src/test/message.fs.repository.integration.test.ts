@@ -1,5 +1,5 @@
 import path from "path";
-import { FileSystemMessageRepository } from "../message.fs.repository";
+import { FileSystemMessageRepository } from "../infra/message.fs.repository";
 import * as fs from "node:fs";
 import { messageBuilder } from "./message.builder";
 
