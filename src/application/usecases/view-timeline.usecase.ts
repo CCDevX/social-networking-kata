@@ -1,6 +1,6 @@
 import { MessageRepository } from "../message.repository";
 import { DateProvider } from "../date-provider";
-const ONE_MINUTE_IN_MS = 60000;
+import { Timeline } from "../../domain/timeline";
 export class ViewTimelineUseCase {
   constructor(
     private readonly messageRepository: MessageRepository,
@@ -17,27 +17,7 @@ export class ViewTimelineUseCase {
     messageOfUser.sort(
       (a, b) => b.publishedAt.getTime() - a.publishedAt.getTime(),
     );
-    const now = this.dateProvider.getNow();
-
-    return messageOfUser.map((msg) => {
-      return {
-        author: msg.author,
-        text: msg.text,
-        publicationTime: this.publicationTime(msg.publishedAt!),
-      };
-    });
+    const timeline = new Timeline(messageOfUser, this.dateProvider.getNow()!);
+    return timeline.data;
   }
-
-  private publicationTime = (publishedAt: Date) => {
-    const now = this.dateProvider.getNow();
-    const diff = now!.getTime() - publishedAt.getTime();
-    const minutes = Math.floor(diff / ONE_MINUTE_IN_MS);
-    if (minutes < 1) {
-      return "less than a minute ago";
-    } else if (minutes < 2) {
-      return "1 minute ago";
-    } else {
-      return `${minutes} minutes ago`;
-    }
-  };
 }

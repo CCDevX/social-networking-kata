@@ -71,6 +71,7 @@ export const createMessagingFixture = () => {
       const message = await messageRepository.getById(expectedMessage.id);
       expect(message).toEqual(expectedMessage);
     },
+    messageRepository,
   };
 };
 
