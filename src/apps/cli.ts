@@ -19,6 +19,18 @@ import { ViewWallUseCase } from "../application/usecases/view-wall.usecase";
 import { PrismaClient } from "../infra/generated/prisma";
 import { PrismaMessageRepository } from "../infra/prisma/message.prisma.repository";
 import { PrismaFolloweeRepository } from "../infra/prisma/followee.prisma.repository";
+import { TimelinePresenter } from "../application/timeline.presenter";
+import { Timeline } from "../domain/timeline";
+import { DefaultTimelinePresenter } from "./timeline.default.presenter";
+
+class CliTimePresenter implements TimelinePresenter {
+  constructor(
+    private readonly defaultTimelinePresent: DefaultTimelinePresenter,
+  ) {}
+  show(timeline: Timeline): void {
+    console.table(this.defaultTimelinePresent.show(timeline));
+  }
+}
 
 const prismaClient = new PrismaClient();
 
@@ -42,8 +54,10 @@ const followUserUseCase = new FollowUserUseCase(followeeRepository);
 const viewWallUseCase = new ViewWallUseCase(
   messageRepository,
   followeeRepository,
-  dateProvider,
 );
+
+const defautTimelinePresenter = new DefaultTimelinePresenter(dateProvider);
+const cliTimelinePresenter = new CliTimePresenter(defautTimelinePresenter);
 
 const program = new Command();
 
@@ -76,7 +90,10 @@ program
       .argument("<user>", "the user to view")
       .action(async (user) => {
         try {
-          const timeline = await viewTimelineUseCase.handle({ user });
+          const timeline = await viewTimelineUseCase.handle(
+            { user },
+            cliTimelinePresenter,
+          );
           console.table(timeline);
           process.exit(0);
         } catch (err) {
@@ -130,7 +147,10 @@ program
       .argument("<user>", "the user to view the wall of")
       .action(async (user) => {
         try {
-          const wall = await viewWallUseCase.handle({ user });
+          const wall = await viewWallUseCase.handle(
+            { user },
+            cliTimelinePresenter,
+          );
           console.table(wall);
           process.exit(0);
         } catch (err) {

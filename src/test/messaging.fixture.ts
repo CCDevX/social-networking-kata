@@ -10,6 +10,9 @@ import {
   EditMessageCommand,
   EditMessageUseCase,
 } from "../application/usecases/edit-message.usecase";
+import { DefaultTimelinePresenter } from "../apps/timeline.default.presenter";
+import { TimelinePresenter } from "../application/timeline.presenter";
+import { Timeline } from "../domain/timeline";
 
 export const createMessagingFixture = () => {
   const dateProvider = new StubDateProvider();
@@ -29,6 +32,13 @@ export const createMessagingFixture = () => {
     publicationTime: string;
   }[];
   let throwError: Error;
+  const defaultTimelinePresenter: DefaultTimelinePresenter =
+    new DefaultTimelinePresenter(dateProvider);
+  const timelinePresenter: TimelinePresenter = {
+    show(theTimeline: Timeline) {
+      timeline = defaultTimelinePresenter.show(theTimeline);
+    },
+  };
   return {
     givenNowIs(date: Date) {
       dateProvider.now = date;
@@ -55,7 +65,7 @@ export const createMessagingFixture = () => {
     },
 
     async whenUserSeesTheTimelineOf(user: string) {
-      timeline = await viewTimelineUseCase.handle({ user });
+      await viewTimelineUseCase.handle({ user }, timelinePresenter);
       return timeline;
     },
     thenUserShouldSee(
