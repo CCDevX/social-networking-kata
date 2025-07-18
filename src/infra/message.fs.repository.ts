@@ -8,21 +8,21 @@ export class FileSystemMessageRepository implements MessageRepository {
     private readonly filePath = path.join(__dirname, "message.json"),
   ) {}
 
-  async save(msg: Message): Promise<void> {
+  async save(message: Message): Promise<void> {
     const messages = await this.getMessages();
-    const existingMessageIndex = messages.findIndex((msg) => msg.id === msg.id);
+    const existingMessageIndex = messages.findIndex(
+      (msg) => msg.id === message.id,
+    );
     if (existingMessageIndex === -1) {
-      messages.push(msg);
+      messages.push(message);
     } else {
-      messages[existingMessageIndex] = msg;
+      messages[existingMessageIndex] = message;
     }
-
     return fs.promises.writeFile(
       this.filePath,
       JSON.stringify(messages.map((m) => m.data)),
     );
   }
-
   private async getMessages(): Promise<Message[]> {
     const data = await fs.promises.readFile(this.filePath);
     const messages = JSON.parse(data.toString()) as {

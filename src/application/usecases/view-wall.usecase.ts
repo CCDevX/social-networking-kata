@@ -15,9 +15,10 @@ export class ViewWallUseCase {
     user: string;
   }): Promise<{ author: string; text: string; publicationTime: string }[]> {
     const followees = await this.followeeRepository.getFolloweesOf(user);
+    const allUsersToInclude = [user, ...followees];
     const messages = (
       await Promise.all(
-        [user, ...followees].map((user) => {
+        allUsersToInclude.map((user) => {
           return this.messageRepository.getAllOfUser(user);
         }),
       )

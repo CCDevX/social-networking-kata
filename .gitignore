@@ -1,4 +1,7 @@
 dist/
 node_modules/
 .idea/
-src/test/messages-test.json
+src/test/message-test.json
+src/test/followee-test.json
+.env
+src/infra/generated/prisma
