@@ -4,10 +4,12 @@
   "description": "This project is a practical implementation of Hexagonal Architecture and Clean Architecture principles in a Node.js + TypeScript environment. It simulates a minimalist Twitter-like CLI application called \"Network\", built incrementally through Test-Driven Development (TDD).",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --noEmit && esbuild index.ts --bundle --platform=node --format=cjs --outfile=dist/index.js"
+    "build:cli": "tsc --noEmit --project tsconfig.json && esbuild ./src/apps/cli.ts --bundle --platform=node --format=cjs --outfile=dist/cli.js",
+    "build:api": "tsc --noEmit --project tsconfig.json && esbuild ./src/apps/api.ts --bundle --platform=node --format=cjs --outfile=dist/api.js",
+    "start:api": "node ./dist/api.js"
   },
   "bin": {
-    "network": "dist/index.js"
+    "network": "dist/cli.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
   },
   "homepage": "https://github.com/CCDevX/social-networking-kata#readme",
   "devDependencies": {
+    "@types/http-errors": "^2.0.5",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.10",
     "cross-env": "^7.0.3",
@@ -37,7 +40,9 @@
     "@prisma/client": "^6.12.0",
     "@prisma/internals": "^6.12.0",
     "commander": "^14.0.0",
-    "dotenv": "^17.2.0"
+    "dotenv": "^17.2.0",
+    "fastify": "^5.4.0",
+    "http-errors": "^2.0.0"
   },
   "prisma": {
     "schema": "src/infra/prisma/schema.prisma"
