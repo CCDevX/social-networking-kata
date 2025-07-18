@@ -66,11 +66,15 @@ const routes = async (fastifyInstance: FastifyInstance) => {
         author: request.body.user,
       };
       try {
-        await postMessageUseCase.handle(postMessageCommand);
-        reply.status(201);
+        const result = await postMessageUseCase.handle(postMessageCommand);
+        if (result.isOk()) {
+          reply.status(201);
+        } else {
+          reply.send(httpErrors[500](result.error.message));
+        }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
-        reply.send(httpErrors[500](message));
+        reply.send(httpErrors[403](message));
       }
     },
   );
@@ -83,8 +87,12 @@ const routes = async (fastifyInstance: FastifyInstance) => {
       text: request.body.message,
     };
     try {
-      await editMessageUseCase.handle(editMessageCommand);
-      reply.status(200);
+      const result = await editMessageUseCase.handle(editMessageCommand);
+      if (result.isOk()) {
+        reply.status(200);
+      } else {
+        reply.send(httpErrors[403](result.error.message));
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       reply.send(httpErrors[500](message));

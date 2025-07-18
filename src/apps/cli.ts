@@ -75,10 +75,15 @@ program
           author: user,
         };
         try {
-          await postMessageUseCase.handle(postMessageCommand);
-          console.log("Message posted");
-          // console.table([messageRepository.message]);
-          process.exit(0);
+          const result = await postMessageUseCase.handle(postMessageCommand);
+          if (result.isOk()) {
+            console.log("Message posted");
+            // console.table([messageRepository.message]);
+            process.exit(0);
+          } else {
+            console.error("Error : ", result.error);
+            process.exit(1);
+          }
         } catch (err) {
           console.error("Error : ", err);
           process.exit(1);
@@ -112,10 +117,15 @@ program
           text: message,
         };
         try {
-          await editMessageUseCase.handle(editMessageCommand);
-          console.log("Message edited");
-          // console.table([messageRepository.message]);
-          process.exit(0);
+          const result = await editMessageUseCase.handle(editMessageCommand);
+          if (result.isOk()) {
+            console.log("Message edited");
+            // console.table([messageRepository.message]);
+            process.exit(0);
+          } else {
+            console.error("Error : ", result.error);
+            process.exit(1);
+          }
         } catch (err) {
           console.error("Error : ", err);
           process.exit(1);

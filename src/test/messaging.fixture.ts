@@ -44,17 +44,15 @@ export const createMessagingFixture = () => {
       dateProvider.now = date;
     },
     async whenUserPostsAMessage(postMessageCommand: PostMessageCommand) {
-      try {
-        await postMessageUseCase.handle(postMessageCommand);
-      } catch (err) {
-        throwError = err as Error;
+      const result = await postMessageUseCase.handle(postMessageCommand);
+      if (result.isErr()) {
+        throwError = result.error;
       }
     },
     async whenUserEditsMessage(editMessageCommand: EditMessageCommand) {
-      try {
-        await editMessageUseCase.handle(editMessageCommand);
-      } catch (err) {
-        throwError = err as Error;
+      const result = await editMessageUseCase.handle(editMessageCommand);
+      if (result.isErr()) {
+        throwError = result.error;
       }
     },
     thenErrorShouldBe(expectedError: new () => Error) {
